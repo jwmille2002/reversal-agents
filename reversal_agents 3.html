@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reversal Agents Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,600;1,500&display=swap');
+
+  :root{
+    --ink:#1b2430;
+    --ink-soft:#5a6674;
+    --paper:#f3f5f7;
+    --card:#ffffff;
+    --line:#dbe1e7;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --serif: 'IBM Plex Serif', serif;
+
+    --c-labs:#3f5f8a;      /* slate blue */
+    --c-labs-bg:#eaeff6;
+    --c-antip:#a8631a;     /* amber/clay */
+    --c-antip-bg:#f7eee0;
+    --c-warf:#8a3b3f;      /* burgundy */
+    --c-warf-bg:#f6e9e9;
+    --c-doac:#237065;      /* teal */
+    --c-doac-bg:#e6f1ef;
+    --c-dti:#4b4470;       /* indigo */
+    --c-dti-bg:#ece9f4;
+    --c-hep:#3a6b52;       /* forest green */
+    --c-hep-bg:#e8f0ea;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    font-family:var(--sans);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .app{max-width:980px;margin:0 auto;padding:28px 20px 60px;}
+
+  /* ---------- Header ---------- */
+  header{
+    border-bottom:2px solid var(--ink);
+    padding-bottom:18px;
+    margin-bottom:22px;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  h1{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:30px;
+    margin:0 0 6px;
+    letter-spacing:-0.01em;
+  }
+  header p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:14px;
+    max-width:60ch;
+  }
+
+  /* ---------- Tabs ---------- */
+  .tabbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-bottom:22px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:0;
+  }
+  .tab{
+    font-family:var(--sans);
+    font-weight:600;
+    font-size:13px;
+    color:var(--ink-soft);
+    background:transparent;
+    border:1px solid transparent;
+    border-bottom:none;
+    padding:10px 14px 12px;
+    cursor:pointer;
+    border-radius:8px 8px 0 0;
+    transition:background .15s ease, color .15s ease;
+    position:relative;
+    top:1px;
+  }
+  .tab .dot{
+    display:inline-block;
+    width:7px;height:7px;
+    border-radius:50%;
+    margin-right:7px;
+    background:currentColor;
+    opacity:.55;
+  }
+  .tab:hover{background:var(--card);}
+  .tab.active{
+    color:var(--ink);
+    background:var(--card);
+    border-color:var(--line);
+    border-bottom:1px solid var(--card);
+  }
+  .tab.active[data-cat="labs"]{color:var(--c-labs); box-shadow:inset 0 2px 0 var(--c-labs);}
+  .tab.active[data-cat="antip"]{color:var(--c-antip); box-shadow:inset 0 2px 0 var(--c-antip);}
+  .tab.active[data-cat="warf"]{color:var(--c-warf); box-shadow:inset 0 2px 0 var(--c-warf);}
+  .tab.active[data-cat="doac"]{color:var(--c-doac); box-shadow:inset 0 2px 0 var(--c-doac);}
+  .tab.active[data-cat="dti"]{color:var(--c-dti); box-shadow:inset 0 2px 0 var(--c-dti);}
+  .tab.active[data-cat="hep"]{color:var(--c-hep); box-shadow:inset 0 2px 0 var(--c-hep);}
+
+  /* ---------- Panels ---------- */
+  .panel{display:none;}
+  .panel.active{display:block; animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(3px);} to{opacity:1; transform:translateY(0);}}
+
+  .panel-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:14px;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .panel-title{
+    font-family:var(--serif);
+    font-size:21px;
+    font-weight:600;
+    margin:0;
+  }
+  .panel-sub{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- Table (Tab 1) ---------- */
+  .table-wrap{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13.5px;
+  }
+  thead th{
+    text-align:left;
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    background:var(--paper);
+    padding:11px 14px;
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  tbody td{
+    padding:11px 14px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#fafbfc;}
+  td.agent{font-weight:600;}
+  .flag{
+    display:inline-block;
+    font-family:var(--mono);
+    font-weight:600;
+    font-size:11.5px;
+    padding:3px 9px;
+    border-radius:5px;
+    border:1px solid transparent;
+  }
+  .flag.increase{background:#8a3b3f; color:#ffffff; border-color:#6f2f32;}
+  .flag.neutral{background:#eef0f2; color:#5a6674; border-color:#c9d0d7;}
+  .flag.mixed{background:#fbead0; color:#8a4e0f; border-color:#e3ac5a;}
+  .flag.dialyzable{background:#237065; color:#ffffff; border-color:#1b564d;}
+  .flag.poor{background:#f2a341; color:#4a2e05; border-color:#c97f1f;}
+  .flag.not{background:#eef0f2; color:#5a6674; border-color:#c9d0d7;}
+
+  /* ---------- Cards (Tabs 2-5) ---------- */
+  .stack{display:flex; flex-direction:column; gap:14px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:4px solid var(--accent, var(--ink));
+    border-radius:10px;
+    padding:16px 18px;
+  }
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+    margin-bottom:10px;
+    flex-wrap:wrap;
+  }
+  .agent-name{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:16.5px;
+    margin:0;
+  }
+  .target-tags{
+    display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;
+  }
+  .target-tag{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--ink-soft);
+    background:var(--paper);
+    border:1px solid var(--line);
+    padding:2px 7px;
+    border-radius:5px;
+  }
+  .dose-block{
+    font-family:var(--mono);
+    font-size:12.5px;
+    line-height:1.65;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:10px 12px;
+    margin:8px 0;
+    color:var(--ink);
+    white-space:pre-wrap;
+  }
+  .dose-block .lbl{color:var(--ink-soft);}
+  .ae-row{
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+    margin-top:10px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .ae-row .ae-label{
+    font-family:var(--mono);
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--accent, var(--ink-soft));
+    flex-shrink:0;
+    padding-top:1px;
+  }
+  .ae-tags{display:flex; flex-wrap:wrap; gap:6px;}
+  .ae-tag{
+    background:transparent;
+    border:1px solid var(--line);
+    padding:2px 8px;
+    border-radius:20px;
+    font-size:11.5px;
+  }
+
+  /* clinical note callout */
+  .note{
+    background:var(--accent-bg, var(--paper));
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 16px;
+    font-size:13px;
+    color:var(--ink);
+    line-height:1.6;
+    margin-bottom:16px;
+  }
+  .note .note-label{
+    font-family:var(--mono);
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--accent, var(--ink-soft));
+    display:block;
+    margin-bottom:5px;
+  }
+  .note ul{margin:6px 0 0; padding-left:18px;}
+  .note li{margin-bottom:3px;}
+
+  footer{
+    margin-top:34px;
+    padding-top:14px;
+    border-top:1px solid var(--line);
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+
+  @media (max-width:640px){
+    h1{font-size:24px;}
+    .tab{font-size:12px; padding:9px 10px 11px;}
+    table{font-size:12px;}
+    thead th, tbody td{padding:9px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="eyebrow">Pharmacy &middot; Quick Reference</div>
+    <h1>Anticoagulant &amp; Antiplatelet Reversal</h1>
+    <p>Lab-test effects, dialyzability, and suggested reversal-agent dosing strategies for common anticoagulants and antiplatelets.</p>
+  </header>
+
+  <nav class="tabbar" id="tabbar">
+    <button class="tab active" data-cat="antip" data-target="panel-antip"><span class="dot"></span>Antiplatelets</button>
+    <button class="tab" data-cat="warf" data-target="panel-warf"><span class="dot"></span>Warfarin</button>
+    <button class="tab" data-cat="doac" data-target="panel-doac"><span class="dot"></span>DOAC (Anti-Xa)</button>
+    <button class="tab" data-cat="dti" data-target="panel-dti"><span class="dot"></span>Direct thrombin inhibitors</button>
+    <button class="tab" data-cat="hep" data-target="panel-hep"><span class="dot"></span>Heparin derivatives</button>
+    <button class="tab" data-cat="labs" data-target="panel-labs"><span class="dot"></span>Effect on lab testing/ dialyzability</button>
+  </nav>
+
+  <!-- ================= TAB: LABS ================= -->
+  <section class="panel" id="panel-labs">
+    <div class="panel-head">
+      <h2 class="panel-title">Effects of anticoagulants on clotting tests</h2>
+      <span class="panel-sub">aPTT &middot; PT/INR &middot; half-life &middot; dialysis</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Anticoagulant</th><th>aPTT</th><th>PT/INR</th><th>Elimination half-life</th><th>Effect of dialysis</th></tr>
+        </thead>
+        <tbody id="labs-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= TAB 2: ANTIPLATELETS ================= -->
+  <section class="panel active" id="panel-antip">
+    <div class="panel-head">
+      <h2 class="panel-title">Antiplatelet reversal</h2>
+      <span class="panel-sub">Aspirin &middot; Clopidogrel &middot; Prasugrel &middot; Ticagrelor</span>
+    </div>
+
+    <div class="note" style="--accent:var(--c-antip); --accent-bg:var(--c-antip-bg);">
+      <span class="note-label">Reversal strategy</span>
+      Reversal is controversial. Consider platelet transfusion if any of: neurosurgery, ventriculostomy, large ICH, or acute neurologic decline with intracranial hemorrhage. For intracranial hemorrhage or surgical intervention (e.g. CABG), consider TXA/EACA or desmopressin.
+    </div>
+
+    <div class="stack" id="antip-cards"></div>
+  </section>
+
+  <!-- ================= TAB 3: WARFARIN ================= -->
+  <section class="panel" id="panel-warf">
+    <div class="panel-head">
+      <h2 class="panel-title">Warfarin reversal</h2>
+      <span class="panel-sub">Vitamin K antagonist</span>
+    </div>
+
+    <div class="note" style="--accent:var(--c-warf); --accent-bg:var(--c-warf-bg);">
+      <span class="note-label">Reversal strategy</span>
+      Preferred agent: 4F-PCC, fixed dose or INR/weight-based dose. Vitamin K 1&ndash;10 mg IV/PO for all patients. Administer vitamin K before administering PCC.
+    </div>
+
+    <div class="stack" id="warf-cards"></div>
+  </section>
+
+  <!-- ================= TAB 4: DOAC (ANTI-XA) ================= -->
+  <section class="panel" id="panel-doac">
+    <div class="panel-head">
+      <h2 class="panel-title">DOAC (Anti-Xa) reversal</h2>
+      <span class="panel-sub">Rivaroxaban &middot; Apixaban &middot; Edoxaban</span>
+    </div>
+
+    <div class="note" style="--accent:var(--c-doac); --accent-bg:var(--c-doac-bg);">
+      <span class="note-label">Reversal strategy</span>
+      Preferred agent: andexanet alfa. Alternative agent: 4F-PCC (weight-based dose or fixed dose).
+    </div>
+
+    <div class="stack" id="doac-cards"></div>
+  </section>
+
+  <!-- ================= TAB 5: DIRECT THROMBIN INHIBITORS ================= -->
+  <section class="panel" id="panel-dti">
+    <div class="panel-head">
+      <h2 class="panel-title">Direct thrombin inhibitors</h2>
+      <span class="panel-sub">Dabigatran &middot; Argatroban &middot; Bivalirudin &middot; Fondaparinux</span>
+    </div>
+
+    <div class="note" style="--accent:var(--c-dti); --accent-bg:var(--c-dti-bg);">
+      <span class="note-label">Reversal strategy</span>
+      Dabigatran &mdash; preferred agent: idarucizumab. Alternative agents: rFVIIa, FEIBA, or dialysis (4F-PCC also listed below). Argatroban/bivalirudin have a short half-life; a reversal agent is not recommended.
+    </div>
+
+    <div class="stack" id="dti-cards"></div>
+  </section>
+
+  <!-- ================= TAB 6: HEPARIN DERIVATIVES ================= -->
+  <section class="panel" id="panel-hep">
+    <div class="panel-head">
+      <h2 class="panel-title">Heparin derivative reversal</h2>
+      <span class="panel-sub">Unfractionated heparin (UFH) &middot; Low-molecular-weight heparin (LMWH)</span>
+    </div>
+
+    <div class="stack" id="ufh-cards"></div>
+  </section>
+
+  <footer>
+    Source: reversal agent dosing strategies and clotting-test effect tables, and reversal-strategy flowchart, from the uploaded reference PDF.<br>
+    For clinical decision-making, confirm current doses and institutional protocols.
+  </footer>
+</div>
+
+<script>
+  // ---------- Tab switching ----------
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(t=>{
+    t.addEventListener('click', ()=>{
+      tabs.forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById(t.dataset.target).classList.add('active');
+    });
+  });
+
+  // ---------- Tab 1 data ----------
+  const labsData = [
+    ["Warfarin","Increase or neutral","Increase","7 days","not"],
+    ["Rivaroxaban","Increase or neutral","Increase or neutral","5\u20139 h","not"],
+    ["Apixaban","Increase or neutral","Increase or neutral","12 h","poor"],
+    ["Edoxaban","Neutral","Increase or neutral","10\u201314 h","not"],
+    ["Betrixaban","Increase","Increase","19\u201327 h","not"],
+    ["Argatroban","Increase","Increase","30\u201350 min","poor"],
+    ["Dabigatran","Increase","Increase or neutral","12\u201317 h","dialyzable"],
+    ["Bivalirudin","Increase","Increase or neutral","20\u201325 min","poor"],
+    ["IV UFH","Increase","Neutral","30 min","not"],
+    ["LMWH","Increase or neutral","Neutral","4.5\u20135 h","not"],
+  ];
+  function flagClass(text){
+    if(text.toLowerCase()==='not dialyzable' || text.toLowerCase()==='not') return 'not';
+    if(text.toLowerCase().includes('poorly') || text.toLowerCase()==='poor') return 'poor';
+    if(text.toLowerCase()==='dialyzable') return 'dialyzable';
+    if(text.toLowerCase()==='neutral') return 'neutral';
+    if(text.toLowerCase().includes('or neutral')) return 'mixed';
+    return 'increase';
+  }
+  function dialysisLabel(code){
+    return {not:"Not dialyzable", poor:"Poorly dialyzable", dialyzable:"Dialyzable"}[code];
+  }
+  const labsBody = document.getElementById('labs-tbody');
+  labsData.forEach(row=>{
+    const [agent, aptt, ptinr, halflife, dial] = row;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="agent">${agent}</td>
+      <td><span class="flag ${flagClass(aptt)}">${aptt}</span></td>
+      <td><span class="flag ${flagClass(ptinr)}">${ptinr}</span></td>
+      <td style="font-family:var(--mono); font-size:12.5px;">${halflife}</td>
+      <td><span class="flag ${flagClass(dial)}">${dialysisLabel(dial)}</span></td>
+    `;
+    labsBody.appendChild(tr);
+  });
+
+  // ---------- Card renderer ----------
+  function renderCards(containerId, accentVar, accentBgVar, items){
+    const el = document.getElementById(containerId);
+    items.forEach(item=>{
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.setProperty('--accent', accentVar);
+      const tags = (item.targets||[]).map(t=>`<span class="target-tag">${t}</span>`).join('');
+      const doseLines = item.dose.map(d=>`<span class="lbl">${d.label ? d.label+': ' : ''}</span>${d.value}`).join('\n');
+      const aeTags = item.ae.map(a=>`<span class="ae-tag">${a}</span>`).join('');
+      card.innerHTML = `
+        <div class="card-top">
+          <div>
+            <p class="agent-name">${item.name}</p>
+            ${tags ? `<div class="target-tags">${tags}</div>` : ''}
+          </div>
+        </div>
+        ${item.note ? `<div style="font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;">${item.note}</div>` : ''}
+        <div class="dose-block">${doseLines}</div>
+        <div class="ae-row">
+          <span class="ae-label">Adverse&nbsp;reactions</span>
+          <div class="ae-tags">${aeTags}</div>
+        </div>
+      `;
+      el.appendChild(card);
+    });
+  }
+
+  // ---------- Tab 2: Antiplatelets ----------
+  renderCards('antip-cards', 'var(--c-antip)', 'var(--c-antip-bg)', [
+    {
+      name:"DDAVP (desmopressin)",
+      targets:["Aspirin","Clopidogrel","Prasugrel","Ticagrelor"],
+      dose:[{label:"Dose", value:"0.3\u20130.4 mcg/kg/dose"}],
+      ae:["Fluid retention","Pulmonary edema"]
+    },
+    {
+      name:"Platelet transfusion",
+      targets:["Aspirin","Clopidogrel","Prasugrel","Ticagrelor"],
+      dose:[{label:"", value:"Up to a single apheresis unit or equivalent"}],
+      note:"Greater doses are not more effective; a half apheresis unit is equally effective.",
+      ae:["Volume overload","Anaphylactic reactions","Hemolytic reactions","Transfusion-related lung injury","Infections"]
+    },
+    {
+      name:"TXA (tranexamic acid)",
+      targets:["Aspirin","Clopidogrel","Prasugrel","Ticagrelor"],
+      dose:[
+        {label:"Loading (IV bolus)", value:"1 g, 100 mg/kg, or 10 mg/kg"},
+        {label:"Maintenance", value:"30 mg/kg, 200 mg/h, 10 mg/kg, 50 mg/kg, or 10 mg/kg"}
+      ],
+      ae:["Anaphylactic reactions","Thromboembolic risk","Visual disturbances"]
+    },
+    {
+      name:"EACA (aminocaproic acid)",
+      targets:["Aspirin","Clopidogrel","Prasugrel","Ticagrelor"],
+      dose:[
+        {label:"Loading (IV bolus)", value:"4 g"},
+        {label:"Maintenance (CIVI)", value:"1 g/h, max infusion 4 h"}
+      ],
+      ae:["Anaphylactic reactions","Thromboembolic risk","Visual disturbances"]
+    },
+  ]);
+
+  // ---------- Tab 3: Warfarin ----------
+  renderCards('warf-cards', 'var(--c-warf)', 'var(--c-warf-bg)', [
+    {
+      name:"Vitamin K",
+      targets:["Warfarin"],
+      dose:[
+        {label:"Minor bleed", value:"2\u20135 mg PO/IV"},
+        {label:"Major bleed", value:"5\u201310 mg IV"}
+      ],
+      ae:["Anaphylactic reactions","Temporary warfarin resistance"]
+    },
+    {
+      name:"4F-PCC",
+      targets:["Warfarin"],
+      dose:[
+        {label:"Fixed \u2014 non-intracranial hemorrhage", value:"1000 units"},
+        {label:"Fixed \u2014 intracranial hemorrhage", value:"1500\u20132000 units"},
+        {label:"INR/weight \u2014 INR 2\u2013<4", value:"25 units/kg"},
+        {label:"INR/weight \u2014 INR 4\u20136", value:"35 units/kg"},
+        {label:"INR/weight \u2014 INR >6", value:"50 units/kg"}
+      ],
+      ae:["HIT","Thromboembolic risk"]
+    },
+    {
+      name:"FFP (fresh frozen plasma)",
+      targets:["Warfarin"],
+      dose:[{label:"", value:"10\u201330 mL/kg (1 unit FFP = 250 mL)"}],
+      note:"FFP does not correct INR to &lt;1.7.",
+      ae:["Infections","Volume overload"]
+    },
+  ]);
+
+  // ---------- Tab 4: DOAC (Anti-Xa) ----------
+  renderCards('doac-cards', 'var(--c-doac)', 'var(--c-doac-bg)', [
+    {
+      name:"Andexanet alfa",
+      targets:["Rivaroxaban","Apixaban","Edoxaban"],
+      dose:[
+        {label:"Low dose", value:"400 mg at 30 mg/min, then 4 mg/min up to 120 min (480 mg total)"},
+        {label:"Low-dose criteria", value:"Last dose <8 h or unknown, rivaroxaban \u2264 10 mg / apixaban \u2264 5 mg \u2014 or last dose >8 h at any dose"},
+        {label:"High dose", value:"800 mg at 30 mg/min, then 8 mg/min up to 120 min (960 mg total)"},
+        {label:"High-dose criteria", value:"Last dose <8 h or unknown, rivaroxaban > 10 mg / apixaban > 5 mg"}
+      ],
+      ae:["Rebound anti-Xa within 2 h of infusion completion","Thromboembolic risk (MI, ischemic stroke)","Flushing","Fever"]
+    },
+    {
+      name:"4F-PCC",
+      targets:["Rivaroxaban","Apixaban","Edoxaban"],
+      dose:[{label:"", value:"25\u201350 units/kg based on actual body weight"}],
+      ae:["HIT","Thromboembolic risk"]
+    },
+  ]);
+
+  // ---------- Tab 5: Direct thrombin inhibitors ----------
+  renderCards('dti-cards', 'var(--c-dti)', 'var(--c-dti-bg)', [
+    {
+      name:"Idarucizumab",
+      targets:["Dabigatran"],
+      dose:[{label:"", value:"5 g IV bolus (two separate 2.5 g doses, each diluted in a 50 mL vial)"}],
+      ae:["Thromboembolic risk"]
+    },
+    {
+      name:"4F-PCC",
+      targets:["Dabigatran"],
+      dose:[{label:"", value:"25\u201350 units/kg based on actual body weight"}],
+      ae:["HIT","Thromboembolic risk"]
+    },
+    {
+      name:"rFVIIa",
+      targets:["Argatroban","Bivalirudin","Fondaparinux"],
+      dose:[{label:"", value:"70\u201390 mcg/kg"}],
+      ae:["Anaphylactic reactions"]
+    },
+  ]);
+
+  renderCards('ufh-cards', 'var(--c-hep)', 'var(--c-hep-bg)', [
+    {
+      name:"Protamine sulfate",
+      targets:["UFH","LMWH"],
+      dose:[
+        {label:"UFH reversal", value:"1 mg per 100 units, if given within 2\u20134 h of last UFH exposure"},
+        {label:"LMWH reversal", value:"1 mg per 1 mg LMWH, given within the prior 8 hours"}
+      ],
+      ae:["Anaphylactic reactions"]
+    },
+  ]);
+</script>
+</body>
+</html>
