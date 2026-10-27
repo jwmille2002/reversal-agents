@@ -212,6 +212,18 @@
     font-size:16.5px;
     margin:0;
   }
+  .badge-warn{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:600;
+    color:#ffffff;
+    background:#8a3b3f;
+    border-radius:5px;
+    padding:3px 8px;
+    margin-left:10px;
+    vertical-align:middle;
+  }
   .target-tags{
     display:flex; gap:6px; flex-wrap:wrap; margin-top:4px;
   }
@@ -377,7 +389,7 @@
 
     <div class="note" style="--accent:var(--c-doac); --accent-bg:var(--c-doac-bg);">
       <span class="note-label">Reversal strategy</span>
-      Preferred agent: andexanet alfa. Alternative agent: 4F-PCC (weight-based dose or fixed dose).
+      Preferred agent: 4F-PCC. Andexanet alfa has been discontinued in the US due to risk of thrombosis.
     </div>
 
     <div class="stack" id="doac-cards"></div>
@@ -562,7 +574,13 @@
   // ---------- Tab 4: DOAC (Anti-Xa) ----------
   renderCards('doac-cards', 'var(--c-doac)', 'var(--c-doac-bg)', [
     {
-      name:"Andexanet alfa",
+      name:"4F-PCC",
+      targets:["Rivaroxaban","Apixaban","Edoxaban"],
+      dose:[{label:"", value:"25\u201350 units/kg based on actual body weight"}],
+      ae:["HIT","Thromboembolic risk"]
+    },
+    {
+      name:"Andexanet alfa <span class=\"badge-warn\">Discontinued in US due to risk of thrombosis</span>",
       targets:["Rivaroxaban","Apixaban","Edoxaban"],
       dose:[
         {label:"Low dose", value:"400 mg at 30 mg/min, then 4 mg/min up to 120 min (480 mg total)"},
@@ -571,12 +589,6 @@
         {label:"High-dose criteria", value:"Last dose <8 h or unknown, rivaroxaban > 10 mg / apixaban > 5 mg"}
       ],
       ae:["Rebound anti-Xa within 2 h of infusion completion","Thromboembolic risk (MI, ischemic stroke)","Flushing","Fever"]
-    },
-    {
-      name:"4F-PCC",
-      targets:["Rivaroxaban","Apixaban","Edoxaban"],
-      dose:[{label:"", value:"25\u201350 units/kg based on actual body weight"}],
-      ae:["HIT","Thromboembolic risk"]
     },
   ]);
 
